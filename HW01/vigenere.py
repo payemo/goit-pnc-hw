@@ -64,19 +64,20 @@ def friedman_test(ciphertext: str):
     expected_ic = 1.73 / (ic - 0.038) if ic > 0.038 else None
     return round(expected_ic) if expected_ic else None
 
-# Приклад використання
-key = "CRYPTOGRAPHY"
+if __name__ == '__main__':
+    # Приклад використання
+    key = "CRYPTOGRAPHY"
 
-with open(file_path, 'r', encoding='utf-8') as f:
-    plaintext = f.read().strip()
+    with open(file_path, 'r', encoding='utf-8') as f:
+        plaintext = f.read().strip()
 
-ciphertext = vigenere_encrypt(plaintext, key)
-decrypted = vigenere_decrypt(ciphertext, key)
+    ciphertext = vigenere_encrypt(plaintext, key)
+    decrypted = vigenere_decrypt(ciphertext, key)
 
-detected_length_kasiski = kasiski_examination(ciphertext)
-detected_length_friedman = friedman_test(ciphertext)
+    detected_length_kasiski = kasiski_examination(ciphertext)
+    detected_length_friedman = friedman_test(ciphertext)
 
-print("Encrypted:", ciphertext)
-print("Decrypted:", decrypted)
-print("Key length (Kasiski):", detected_length_kasiski)
-print("Key length (Friedman):", detected_length_friedman)
+    print("Encrypted:", ciphertext)
+    print("Decrypted:", decrypted)
+    print("Key length (Kasiski):", detected_length_kasiski)
+    print("Key length (Friedman):", detected_length_friedman)
