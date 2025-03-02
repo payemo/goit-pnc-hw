@@ -22,7 +22,7 @@ def simple_transposition_encrypt(text: str, key: str):
 
 
 def simple_transposition_decrypt(text, key):
-    """Коригований алгоритм дешифрування для перестановочного шифру."""
+    """Алгоритм дешифрування для перестановочного шифру."""
     columns = len(key)
     rows = -(-len(text) // columns)
     key_order = create_permutation_key(key)

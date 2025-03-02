@@ -25,7 +25,6 @@ def table_encrypt(text: str, key: str):
     return encrypted_text
 
 def table_decrypt(text, key):
-    """Дешифрування для табличного шифру."""
     columns = len(key)
     rows = -(-len(text) // columns)
     key_order = create_table_key(key)
