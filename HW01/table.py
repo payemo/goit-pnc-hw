@@ -25,19 +25,28 @@ def table_encrypt(text: str, key: str):
     return encrypted_text
 
 def table_decrypt(text, key):
+    """Дешифрування для табличного шифру."""
     columns = len(key)
     rows = -(-len(text) // columns)
     key_order = create_table_key(key)
-    
+
+    # Визначаємо довжину кожного стовпця
+    num_full_columns = len(text) % columns
+    col_lengths = [rows] * num_full_columns + [rows - 1] * (columns - num_full_columns)
+
+    # Заповнюємо матрицю дешифрування по стовпцях у правильному порядку
     decrypted_matrix = [[''] * columns for _ in range(rows)]
     index = 0
-    for i in key_order:
-        for row in range(rows):
+    for col_idx in key_order:
+        col_length = col_lengths[col_idx]
+        for row in range(col_length):
             if index < len(text):
-                decrypted_matrix[row][i] = text[index]
+                decrypted_matrix[row][col_idx] = text[index]
                 index += 1
-    
-    return ''.join(''.join(row) for row in decrypted_matrix).strip()
+
+    # Читаємо текст по рядках
+    decrypted_text = ''.join(''.join(row) for row in decrypted_matrix).strip()
+    return decrypted_text
 
 def double_encrypt(text, vigenere_key, table_key):
     first_pass = vigenere_encrypt(text, vigenere_key)
