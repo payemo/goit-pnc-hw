@@ -1,5 +1,4 @@
 import numpy as np
-import itertools
 import os
 
 script_dir = os.path.dirname(os.path.abspath(__file__))
@@ -22,20 +21,28 @@ def simple_transposition_encrypt(text: str, key: str):
     return enc_text
 
 
-def simple_transposition_decrypt(text: str, key: str):
+def simple_transposition_decrypt(text, key):
+    """Коригований алгоритм дешифрування для перестановочного шифру."""
     columns = len(key)
     rows = -(-len(text) // columns)
     key_order = create_permutation_key(key)
-
-    decrypt_matrix = [[''] * columns for _ in range(rows)]
+    
+    # Визначаємо довжини стовпців
+    num_full_columns = len(text) % columns
+    col_lengths = [rows] * num_full_columns + [rows - 1] * (columns - num_full_columns)
+    
+    # Заповнюємо матрицю для дешифрування
+    decrypted_matrix = [[''] * columns for _ in range(rows)]
     index = 0
-    for i in key_order:
-        for row in range(rows):
+    for col_idx in key_order:
+        col_length = col_lengths[col_idx]
+        for row in range(col_length):
             if index < len(text):
-                decrypt_matrix[row][i] = text[index]
+                decrypted_matrix[row][col_idx] = text[index]
                 index += 1
     
-    return ''.join(itertools.chain.from_iterable(decrypt_matrix)).strip()
+    decrypted_text = ''.join(''.join(row) for row in decrypted_matrix).strip()
+    return decrypted_text
 
 def double_transposition_encrypt(text, key1, key2):
     first_pass = simple_transposition_encrypt(text, key1)
@@ -49,9 +56,8 @@ def double_transposition_decrypt(text, key1, key2):
 key1 = "SECRET"
 key2 = "CRYPTO"
 
-# with open(file_path, 'r', encoding='utf-8') as f:
-#     plaintext = f.read().strip()
-plaintext = "THIS IS A SECRET MESSAGE"
+with open(file_path, 'r', encoding='utf-8') as f:
+    plaintext = f.read().strip()
 
 ciphertext = double_transposition_encrypt(plaintext, key1, key2)
 decrypted = double_transposition_decrypt(ciphertext, key1, key2)
